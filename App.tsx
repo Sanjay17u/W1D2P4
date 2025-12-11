@@ -1,80 +1,76 @@
-import React, { useState } from 'react'
-import { View, Text, StyleSheet, TextInput, Button } from 'react-native'
-
-
+import React, { useState } from "react";
+import { View, Text, StyleSheet, TextInput, Button } from "react-native";
 
 function App() {
+  const [text, setText] = useState("");
 
-  const [isHave, setIsHave] = useState(true)
-  const [count, setCount] = useState(0)
-  const [inputValue, setInputValue] = useState("");
+  const handleChange = (value: string) => {
+    setText(value); // simple & clean
+  };
 
+  const clearText = () => {
+    setText("");
+  };
 
-  const countHandler = (text: any) => {
-    if (text.length > inputValue.length) {
-
-      setCount(() => count + 1)
-
-    } else if (text.length < inputValue.length) {
-
-      setCount(() => count - 1)
-
-    }
-    
-    if (text.length === 0 || text.length >= 20) {
-      setIsHave(false)
-    } else {
-      setIsHave(true)
-    }
-
-    setInputValue(text)
-
-  }
-
-  const clearCount = () => {
-    setCount(0)
-    setInputValue('')
-    setIsHave(true)
-  }
+  const count = text.length;
+  const isError = count > 20;
 
   return (
-    <>
     <View style={styles.container}>
-      <Text style={styles.countText}> { count } </Text>    
-        <TextInput editable={ isHave } value={inputValue} onChangeText={ (text) => countHandler(text) } style={styles.InputCounter} />  
-        <Button onPress={ clearCount } disabled={ isHave } title='Clear Text'/>  
+      <Text style={[styles.countText, isError && styles.countTextError]}>
+        {count}
+      </Text>
+
+      {isError && (
+        <Text style={styles.errorText}>Character limit exceeded (20)</Text>
+      )}
+
+      <TextInput
+        style={styles.InputCounter}
+        value={text}
+        onChangeText={handleChange}
+        placeholder="Type something..."
+        placeholderTextColor="gray"
+      />
+
+      <Button title="Clear Text" onPress={clearText} />
     </View>
-    </>
-  )
+  );
 }
 
-
-
-export default App
-
+export default App;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'black',
-    display: 'flex',
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    backgroundColor: "black",
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   countText: {
-    color: 'white',
+    color: "white",
     fontSize: 30,
-    fontWeight: '700',
+    fontWeight: "700",
+  },
 
+  countTextError: {
+    color: "red",
+  },
+
+  errorText: {
+    color: "red",
+    marginTop: 10,
+    fontSize: 16,
   },
 
   InputCounter: {
     borderWidth: 1,
-    borderColor: 'gray',
-    width: '80%',
+    borderColor: "gray",
+    width: "80%",
     borderRadius: 5,
-    marginVertical: 30,
-    color: 'white'
-  }
-})
+    marginVertical: 20,
+    color: "white",
+    padding: 10,
+  },
+});
